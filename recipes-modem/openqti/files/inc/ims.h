@@ -9,7 +9,7 @@
 #include <stdio.h>
 /*
  * LET'S PLAY WITH IMS
- *  Season 1, chapter 1
+ *  Season 1, chapter 2
  *
  *
  */
@@ -298,8 +298,19 @@ enum  {
     IMS_GET_SETTINGS_SIP_KEEPALIVE_ENABLED = 0x1a, //U8
     IMS_GET_SETTINGS_SIP_NAT_RTO_TIMER = 0x1b, // u32
     IMS_GET_SETTINGS_SIP_TIMER_OPERATOR_MODE = 0x1c, // U32
+
+	// Subscription stuff
+	IMS_ACTIVE_SUBSCRIPTION_PRIMARY = 0x10, //all booleans
+	IMS_ACTIVE_SUBSCRIPTION_SECONDARY = 0x11,
+	IMS_ACTIVE_SUBSCRIPTION_TERTIARY = 0x12,
+
 };
 
+struct subscription_status_indication {
+	uint8_t type;
+	uint16_t len;
+	uint8_t state;
+} __attribute__((packed));
 const char *get_ims_command(uint16_t msgid);
 void *register_to_ims_service();
 int handle_incoming_ims_message(uint8_t *buf, size_t buf_len);
