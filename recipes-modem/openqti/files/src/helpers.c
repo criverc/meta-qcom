@@ -308,11 +308,11 @@ int get_int_from_str(char *str, int offset) {
 void *power_key_event() {
   int fd = 0;
   struct input_event ev;
-  struct timeval prev;
-  struct timeval cur;
+  double elapsed_time = 0;
+  struct timespec prev;
+  struct timespec cur;
+  clock_gettime(CLOCK_MONOTONIC, &prev);
   int ret = 0;
-  memset(&prev, 0, sizeof(struct timeval));
-  memset(&cur, 0, sizeof(struct timeval));
 
   fd = open(INPUT_DEV, O_RDONLY);
   if (fd == -1) {
@@ -326,12 +326,16 @@ void *power_key_event() {
     } else {
 
       if (ev.type == EV_KEY && ev.code == KEY_POWER && ev.value == 1) {
-        memcpy(&prev, &ev.time, sizeof(struct timeval));
+         clock_gettime(CLOCK_MONOTONIC, &prev);       
       } else if (ev.type == EV_KEY && ev.code == KEY_POWER && ev.value == 0) {
-        memcpy(&cur, &ev.time, sizeof(struct timeval));
-        if (elapsed_time(&prev, &cur) > 1000000) {
+         clock_gettime(CLOCK_MONOTONIC, &cur);       
+          elapsed_time = (((cur.tv_sec - prev.tv_sec) * 1e9) +
+                  (cur.tv_nsec - prev.tv_nsec)) / 1e9; // in seconds
+        if (elapsed_time > 1) {
           logger(MSG_ERROR, "%s: Power GPIO long press detected\n", __func__);
         } else {
+          write_boot_counter_file(0);
+          do_sync_fs();
           logger(MSG_ERROR, "%s: Poweroff requested!\n", __func__);
           syscall(SYS_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
                   LINUX_REBOOT_CMD_RESTART, NULL);
@@ -339,7 +343,6 @@ void *power_key_event() {
       }
     }
   }
-
   return NULL;
 }
 
@@ -398,7 +401,6 @@ int wipe_message_storage() {
   }
   close(fd);
   logger(MSG_INFO, "%s: Message storage cleared\n", __func__);
-
   return 0;
 }
 

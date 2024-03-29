@@ -273,6 +273,13 @@ int write_settings_to_storage() {
   fprintf(fp, "apn_addr=%s\n", settings->apn_addr);
   fprintf(fp, "apn_username=%s\n", settings->apn_username);
   fprintf(fp, "apn_password=%s\n", settings->apn_password);
+  fprintf(fp, "ims_apn_addr=%s\n", settings->ims_apn_addr);
+  fprintf(fp, "ims_apn_username=%s\n", settings->ims_apn_username);
+  fprintf(fp, "ims_apn_password=%s\n", settings->ims_apn_password);
+  fprintf(fp, "ims_attempt_enable=%i\n", settings->ims_attempt_enable);
+  fprintf(fp, "ims_vt_support=%i\n", settings->ims_vt_support);
+  fprintf(fp, "ims_rtp_support=%i\n", settings->ims_rtp_support);
+  fprintf(fp, "ims_sms_support=%i\n", settings->ims_sms_support);
 
   logger(MSG_DEBUG, "%s: Close\n", __func__);
   fclose(fp);
@@ -303,7 +310,6 @@ int write_boot_counter_file(int failed_boots) {
 int read_boot_counter_file() {
   FILE *fp;
   int val = 0;
-  char buf[4] = {0};
   logger(MSG_DEBUG, "%s: Read boot counter\n", __func__);
   fp = fopen(BOOT_FLAG_FILE, "r");
   if (fp == NULL) {
@@ -311,11 +317,9 @@ int read_boot_counter_file() {
     write_boot_counter_file(0);
     return 0;
   }
-  if (fgets(buf, 4, fp)) {
-    val = atoi(buf);
-  }
+  fscanf(fp, "%i", &val);
   fclose(fp);
-  logger(MSG_INFO, "%s: Failed boot counter: %i\n", __func__, val);
+  logger(MSG_INFO, "%s: Unclean boot counter: %i\n", __func__, val);
   if (val < 0) {
     val = 0;
   }
