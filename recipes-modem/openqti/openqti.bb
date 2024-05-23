@@ -105,9 +105,8 @@ do_install() {
     install -m 0644 ${S}/external/dict.txt ${D}/opt/openqti/
     install -m 0644 ${S}/thankyou/thankyou.txt ${D}/usr/share/thank_you/
     
-    ln -sf -r ${D}/etc/init.d/boot_counter ${D}/etc/rc0.d/K01boot_counter
-    ln -sf -r ${D}/etc/init.d/boot_counter ${D}/etc/rc6.d/K01boot_counter
-  #  ln -sf -r ${D}/etc/init.d/init_openqti ${D}/etc/rcS.d/S40init_openqti
+    ln -sf -r ${D}/etc/init.d/boot_counter ${D}/etc/rcS.d/K01boot_counter
+    ln -sf -r ${D}/etc/init.d/init_openqti ${D}/etc/rcS.d/S40init_openqti
 }
 
 #  If debugging, make sure you add '-l' to openqti command line inside inittab
@@ -118,5 +117,5 @@ do_install() {
 pkg_postinst:${PN}() {
    #!/bin/sh
    # echo "OQ:12345:respawn:/usr/bin/openqti -l" >> $D/etc/inittab
-  echo "OQ:12345:respawn:/usr/bin/openqti" >> $D/etc/inittab
+   # echo "OQ:12345:respawn:/usr/bin/openqti" >> $D/etc/inittab
 }

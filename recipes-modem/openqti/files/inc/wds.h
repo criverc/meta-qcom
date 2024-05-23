@@ -271,6 +271,7 @@ void reset_wds_runtime();
 uint8_t is_wds_initialized();
 int wds_attempt_to_connect();
 void *init_internal_networking();
+void *init_ims_network();
 const char *get_wds_command(uint16_t msgid);
 void wds_chat_ifup_down(bool start);
 int handle_incoming_wds_message(uint8_t *buf, size_t buf_len);

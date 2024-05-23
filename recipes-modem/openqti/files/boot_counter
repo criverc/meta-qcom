@@ -11,7 +11,7 @@ case "$1" in
         ;;
   stop)
       mount -o remount,rw /persist
-      rm $FILENAME
+      echo 0 > $FILENAME
         ;;
   restart)
         $0 stop

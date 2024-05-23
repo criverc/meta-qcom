@@ -64,6 +64,7 @@ int set_initial_config() {
   settings->ims_vt_support = 0;
   settings->ims_rtp_support = 0;
   settings->ims_sms_support = 0;
+  snprintf(settings->ims_apn_addr, MAX_APN_FIELD_SZ, "ims");
   return 0;
 }
 

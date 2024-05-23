@@ -531,7 +531,7 @@ int send_pending_internal_qmi_messages() {
                  __func__, i);
         } else {
           logger(MSG_INFO,
-                 "%s: Requested allocation to svc %.2x. On next pass we'll "
+                 "%s: Requested allocation to svc 0x%.2x. On next pass we'll "
                  "send the pending message\n",
                  __func__, i);
         }
@@ -838,10 +838,10 @@ void *start_service_initialization_thread() {
   register_to_voice_service();
   dms_retrieve_modem_info();
   register_to_pdc_service();
-  register_to_ims_service();
+//  register_to_ims_service();
 //  register_to_mdmfs_service();
   /* oneshot */
   init_internal_networking();
-
+  // init_ims_network();
   return NULL;
 }
